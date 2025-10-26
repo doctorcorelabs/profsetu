@@ -19,14 +19,13 @@ DROP POLICY IF EXISTS "Allow public read access to admin users" ON admin_users;
 ALTER TABLE admin_users DISABLE ROW LEVEL SECURITY;
 
 -- Clear any existing admin users
-DELETE FROM admin_users WHERE username IN ('daivanlabs', 'setiyautama');
+DELETE FROM admin_users WHERE username IN ('YOUR_USERNAME', 'setiyautama');
 
 -- Insert admin user with correct credentials
--- Username: daivanlabs
--- Password: codecure
--- Hash: a3033f5ee7ff1376a03a2c43a40466fa0ac33ba49e28f081cfaa621d5cd0ea5d
+-- IMPORTANT: Replace 'YOUR_USERNAME' and 'YOUR_PASSWORD_HASH' with actual values
+-- Generate password hash using: crypto.createHash('sha256').update('your_password').digest('hex')
 INSERT INTO admin_users (username, password_hash) 
-VALUES ('daivanlabs', 'a3033f5ee7ff1376a03a2c43a40466fa0ac33ba49e28f081cfaa621d5cd0ea5d');
+VALUES ('YOUR_USERNAME', 'YOUR_PASSWORD_HASH');
 
 -- Re-enable RLS
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
@@ -36,7 +35,7 @@ CREATE POLICY "Allow public read access to admin users" ON admin_users
   FOR SELECT USING (true);
 
 -- Verify the admin user was created successfully
-SELECT id, username, created_at FROM admin_users WHERE username = 'daivanlabs';
+SELECT id, username, created_at FROM admin_users WHERE username = 'YOUR_USERNAME';
 
 -- Test the policy by simulating a query
-SELECT id, username FROM admin_users WHERE username = 'daivanlabs' AND password_hash = 'a3033f5ee7ff1376a03a2c43a40466fa0ac33ba49e28f081cfaa621d5cd0ea5d';
+SELECT id, username FROM admin_users WHERE username = 'YOUR_USERNAME' AND password_hash = 'YOUR_PASSWORD_HASH';

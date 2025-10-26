@@ -1,16 +1,10 @@
-# Environment Variables untuk RSS News System
-# Copy file ini ke .env.local dan isi dengan nilai yang sesuai
+# Supabase Configuration Template
+# Copy this file to .env and fill in your actual values
+# NEVER commit .env files to version control!
 
-# Supabase Configuration
 VITE_SUPABASE_URL=your_supabase_project_url_here
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 
-# Supabase Service Role Key (untuk Netlify Functions)
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
-
-# Netlify Site URL (untuk internal function calls)
-NETLIFY_SITE_URL=https://your-site-name.netlify.app
-
-# GitHub Actions Secrets (jika menggunakan GitHub Actions)
-# NETLIFY_ACCESS_TOKEN=your_netlify_access_token
-# NETLIFY_SITE_URL=https://your-site-name.netlify.app
+# Example:
+# VITE_SUPABASE_URL=https://your-project-id.supabase.co
+# VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
