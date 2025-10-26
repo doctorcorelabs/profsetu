@@ -3,8 +3,27 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+// Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
+  throw new Error(
+    'Missing Supabase environment variables. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.'
+  )
+}
+
+// Validate URL format
+const urlPattern = /^https?:\/\/.+/
+if (!urlPattern.test(supabaseUrl)) {
+  throw new Error(
+    `Invalid Supabase URL: "${supabaseUrl}". Must be a valid HTTP or HTTPS URL.`
+  )
+}
+
+// Log validation in development
+if (import.meta.env.DEV) {
+  console.log('🔑 Supabase configuration loaded:', {
+    url: supabaseUrl,
+    hasKey: !!supabaseAnonKey,
+  })
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
