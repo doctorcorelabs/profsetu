@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Line clamp utilities untuk RSS news */
+@layer utilities {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 220 26% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 26% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 26% 14%;
+
+    /* PKB Green Theme */
+    --primary: 150 100% 20%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 150 100% 30%;
+    --primary-glow: 150 80% 40%;
+
+    --secondary: 150 33% 92%;
+    --secondary-foreground: 150 100% 20%;
+
+    --muted: 150 20% 96%;
+    --muted-foreground: 220 16% 47%;
+
+    --accent: 150 100% 25%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 150 100% 20%;
+
+    --radius: 0.75rem;
+
+    /* Custom Design Tokens */
+    --gradient-hero: linear-gradient(135deg, hsl(150 100% 20%) 0%, hsl(150 80% 30%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(150 33% 98%) 100%);
+    --shadow-card: 0 4px 20px -4px hsl(150 100% 20% / 0.15);
+    --shadow-card-hover: 0 8px 30px -4px hsl(150 100% 20% / 0.25);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 150 30% 8%;
+    --foreground: 0 0% 98%;
+
+    --card: 150 25% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 150 25% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 150 80% 40%;
+    --primary-foreground: 150 30% 8%;
+    --primary-light: 150 70% 50%;
+    --primary-glow: 150 60% 60%;
+
+    --secondary: 150 20% 20%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 150 15% 18%;
+    --muted-foreground: 150 10% 65%;
+
+    --accent: 150 70% 35%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 63% 40%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 150 15% 22%;
+    --input: 150 15% 22%;
+    --ring: 150 70% 50%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sora', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-subtle {
+    background: var(--gradient-subtle);
+  }
+
+  .shadow-card-custom {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-card-hover-custom {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+}

@@ -1,0 +1,18 @@
+[build]
+  functions = "netlify/functions"
+  command = "npm run build"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Manual trigger untuk RSS processor
+# Gunakan GitHub Actions atau manual trigger untuk menjalankan 2x sehari
+
+# Environment variables for functions
+[context.production.environment]
+  VITE_SUPABASE_URL = "your_supabase_url_here"
+  SUPABASE_SERVICE_ROLE_KEY = "your_service_role_key_here"
+
+[context.development.environment]
+  VITE_SUPABASE_URL = "your_supabase_url_here"
+  SUPABASE_SERVICE_ROLE_KEY = "your_service_role_key_here"

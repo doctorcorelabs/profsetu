@@ -1,0 +1,24 @@
+name: RSS News Processor
+
+on:
+  schedule:
+    # Jalankan setiap 12 jam (2x sehari) - jam 06:00 dan 18:00 UTC
+    - cron: '0 6,18 * * *'
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  rss-processor:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Trigger RSS Processor
+      run: |
+        echo "Triggering RSS processor at $(date)"
+        
+        # Panggil Netlify function untuk proses RSS
+        curl -X POST \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${{ secrets.NETLIFY_ACCESS_TOKEN }}" \
+          "${{ secrets.NETLIFY_SITE_URL }}/.netlify/functions/rss-processor"
+        
+        echo "RSS processor triggered successfully"

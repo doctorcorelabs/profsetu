@@ -1,0 +1,13 @@
+{
+  "name": "netlify-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for RSS News Processing",
+  "main": "index.js",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.76.1",
+    "rss-parser": "^3.13.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
