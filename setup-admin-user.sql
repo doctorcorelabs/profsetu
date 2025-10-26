@@ -10,10 +10,11 @@ CREATE TABLE IF NOT EXISTS admin_users (
 );
 
 -- Insert admin user with hashed password
--- Password: codecure
--- Hash: 8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4
+-- IMPORTANT: Replace placeholders with actual values from environment variables
+-- ADMIN_USERNAME should be set in your environment variables
+-- ADMIN_PASSWORD_HASH should be generated from your password using SHA256
 INSERT INTO admin_users (username, password_hash) 
-VALUES ('daivanlabs', '8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4')
+VALUES ('ADMIN_USERNAME', 'ADMIN_PASSWORD_HASH')
 ON CONFLICT (username) DO UPDATE SET
   password_hash = EXCLUDED.password_hash;
 

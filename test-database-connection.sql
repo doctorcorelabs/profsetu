@@ -22,14 +22,16 @@ FROM pg_policies
 WHERE tablename = 'admin_users';
 
 -- Test 5: Check if admin user exists
-SELECT id, username, created_at FROM admin_users WHERE username = 'daivanlabs';
+-- IMPORTANT: Replace ADMIN_USERNAME with your actual username
+SELECT id, username, created_at FROM admin_users WHERE username = 'ADMIN_USERNAME';
 
 -- Test 6: Test the exact query that the app will make
+-- IMPORTANT: Replace ADMIN_USERNAME and ADMIN_PASSWORD_HASH with actual values
 SELECT id, username FROM admin_users 
-WHERE username = 'daivanlabs' 
-AND password_hash = 'a3033f5ee7ff1376a03a2c43a40466fa0ac33ba49e28f081cfaa621d5cd0ea5d';
+WHERE username = 'ADMIN_USERNAME' 
+AND password_hash = 'ADMIN_PASSWORD_HASH';
 
 -- Test 7: Test with wrong password (should return no results)
 SELECT id, username FROM admin_users 
-WHERE username = 'daivanlabs' 
+WHERE username = 'ADMIN_USERNAME' 
 AND password_hash = 'wrong_hash';

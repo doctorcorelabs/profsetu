@@ -75,10 +75,12 @@ CREATE TRIGGER update_posts_updated_at
   FOR EACH ROW 
   EXECUTE FUNCTION update_updated_at_column();
 
--- Insert admin user (password: codecure)
--- Hash for 'codecure' using SHA-256: 8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4
+-- Insert admin user with correct credentials
+-- IMPORTANT: Replace placeholders with actual values from environment variables
+-- ADMIN_USERNAME should be set in your environment variables
+-- ADMIN_PASSWORD_HASH should be generated from your password using SHA256
 INSERT INTO admin_users (username, password_hash) 
-VALUES ('daivanlabs', '8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4')
+VALUES ('ADMIN_USERNAME', 'ADMIN_PASSWORD_HASH')
 ON CONFLICT (username) DO UPDATE SET
   password_hash = EXCLUDED.password_hash;
 
