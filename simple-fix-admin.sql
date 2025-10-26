@@ -1,5 +1,6 @@
 -- Simple and effective fix for admin login
 -- Run this in your Supabase SQL Editor
+-- IMPORTANT: Replace placeholders with actual values from environment variables
 
 -- Step 1: Disable RLS temporarily
 ALTER TABLE admin_users DISABLE ROW LEVEL SECURITY;
@@ -7,12 +8,12 @@ ALTER TABLE admin_users DISABLE ROW LEVEL SECURITY;
 -- Step 2: Clear any existing admin users
 DELETE FROM admin_users;
 
--- Step 3: Insert the correct admin user
--- Username: daivanlabs
--- Password: codecure
--- Hash: a3033f5ee7ff1376a03a2c43a40466fa0ac33ba49e28f081cfaa621d5cd0ea5d
+-- Step 3: Insert the admin user
+-- IMPORTANT: Replace these placeholders with actual values:
+-- ADMIN_USERNAME should be set in your environment variables
+-- ADMIN_PASSWORD_HASH should be generated from your password using SHA256
 INSERT INTO admin_users (username, password_hash) 
-VALUES ('daivanlabs', 'a3033f5ee7ff1376a03a2c43a40466fa0ac33ba49e28f081cfaa621d5cd0ea5d');
+VALUES ('ADMIN_USERNAME', 'ADMIN_PASSWORD_HASH');
 
 -- Step 4: Re-enable RLS
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
@@ -26,5 +27,5 @@ SELECT id, username, created_at FROM admin_users;
 
 -- Step 7: Test the exact query
 SELECT id, username FROM admin_users 
-WHERE username = 'daivanlabs' 
-AND password_hash = 'a3033f5ee7ff1376a03a2c43a40466fa0ac33ba49e28f081cfaa621d5cd0ea5d';
+WHERE username = 'ADMIN_USERNAME' 
+AND password_hash = 'ADMIN_PASSWORD_HASH';

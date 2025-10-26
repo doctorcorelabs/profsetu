@@ -31,3 +31,12 @@ dist-ssr
 .env.production.local
 supabase.env
 *.env
+
+# Security sensitive files
+*-with-credentials.sql
+*-sensitive.sql
+password-hashes.txt
+credentials.txt
+
+# Generated files that might contain sensitive data
+generated-*.sql
