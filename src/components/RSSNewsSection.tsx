@@ -30,7 +30,7 @@ export const RSSNewsSection = () => {
         .select('*')
         .in('source', ['CNN Indonesia', 'Antara News'])
         .order('pub_date', { ascending: false })
-        .limit(9);
+        .limit(12);
 
       if (error) {
         console.error('Error loading RSS news:', error);
@@ -76,14 +76,16 @@ export const RSSNewsSection = () => {
   // Scroll to current index
   useEffect(() => {
     if (scrollContainerRef.current) {
-      const element = scrollContainerRef.current.children[currentIndex] as HTMLElement;
-      if (element) {
-        element.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'nearest',
-          inline: 'start'
-        });
-      }
+      const scrollContainer = scrollContainerRef.current;
+      const cardWidth = scrollContainer.children[0]?.clientWidth || 0;
+      const gap = 24; // 1.5rem gap
+      const totalWidth = cardWidth + gap;
+      const scrollPosition = currentIndex * totalWidth;
+      
+      scrollContainer.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
     }
   }, [currentIndex]);
 
@@ -180,7 +182,7 @@ export const RSSNewsSection = () => {
   }
 
   return (
-    <section id="berita-indonesia" className="py-20 bg-gray-50">
+    <section id="berita-indonesia" className="py-20 bg-gray-50 overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
@@ -189,7 +191,7 @@ export const RSSNewsSection = () => {
           <p className="text-gray-600 max-w-2xl mx-auto mb-6">
             Update berita terkini dari CNN Indonesia dan Antara News
           </p>
-          <div className="flex items-center justify-center gap-4 text-sm text-gray-500 mb-4">
+          <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
               <span>Diperbarui 2x sehari</span>
@@ -199,14 +201,6 @@ export const RSSNewsSection = () => {
               <span>Berita dihapus setelah 2 hari</span>
             </div>
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-            {refreshing ? 'Memuat...' : 'Refresh Berita'}
-          </button>
         </div>
 
         {/* Carousel Container */}
@@ -234,15 +228,15 @@ export const RSSNewsSection = () => {
           {/* Carousel */}
           <div 
             ref={scrollContainerRef}
-            className="flex overflow-x-hidden gap-6 scroll-smooth"
+            className="flex overflow-x-scroll gap-6 snap-x snap-mandatory scrollbar-hide"
             style={{ scrollBehavior: 'smooth' }}
           >
-            {news.map((item, index) => (
-              <div
-                key={item.id}
-                className="flex-shrink-0 w-full md:w-1/2 lg:w-1/3"
-                style={{ minWidth: 'calc(33.333% - 1rem)' }}
-              >
+                         {news.map((item, index) => (
+               <div
+                 key={item.id}
+                 className="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 snap-center"
+                 style={{ minWidth: 'calc(33.333% - 1rem)' }}
+               >
                 <Card 
                   className="h-full hover:shadow-lg transition-all duration-300 bg-white"
                 >
@@ -317,7 +311,7 @@ export const RSSNewsSection = () => {
             Berita dari <span className="text-blue-600 font-medium">CNN Indonesia dan Antara News</span>
           </p>
           <p className="text-xs text-gray-400 mt-2">
-            Maksimal 9 berita • Auto-slide setiap 3 detik • Update setiap 12 jam
+            Maksimal 12 berita • Auto-slide setiap 3 detik • Update setiap 12 jam
           </p>
         </div>
       </div>
