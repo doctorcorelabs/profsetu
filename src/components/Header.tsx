@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, Briefcase, Newspaper, ChevronRight } from "lucide-react";
+import { Menu, X, User, Briefcase, Newspaper, ChevronRight, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { LoginModal } from "./LoginModal";
@@ -16,7 +16,7 @@ export const Header = () => {
       setIsScrolled(window.scrollY > 20);
       
       // Detect active section for scroll-based highlighting
-      const sections = ['profil', 'program', 'berita'];
+      const sections = ['berita', 'profil', 'program', 'berita-indonesia'];
       const scrollPosition = window.scrollY + 100;
       
       for (const section of sections) {
@@ -53,9 +53,10 @@ export const Header = () => {
   };
 
   const navLinks = [
+    { href: "#berita", label: "Berita & Kegiatan", icon: Newspaper },
     { href: "#profil", label: "Profil", icon: User },
     { href: "#program", label: "Program Kerja", icon: Briefcase },
-    { href: "#berita", label: "Berita & Kegiatan", icon: Newspaper },
+    { href: "#berita-indonesia", label: "Berita Indonesia", icon: Globe },
   ];
 
   return (

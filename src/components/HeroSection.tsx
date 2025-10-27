@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/setiya-utama-hero.png";
+import heroImage from "@/assets/new hero section.png";
 import { ArrowRight } from "lucide-react";
 
 export const HeroSection = () => {
@@ -29,8 +29,8 @@ export const HeroSection = () => {
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" variant="hero" asChild className="group">
-                <a href="#program">
-                  Lihat Program Kerja
+                <a href="#berita">
+                  Lihat Berita & Kegiatan Terbaru
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
               </Button>

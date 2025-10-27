@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ExternalLink, Clock, Newspaper, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ExternalLink, Newspaper, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 interface RSSNewsItem {
@@ -134,14 +134,14 @@ export const RSSNewsSection = () => {
 
   if (loading) {
     return (
-      <section id="berita-indonesia" className="py-20 bg-gray-50">
+      <section id="berita-indonesia" className="py-20 gradient-subtle">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
               Berita Indonesia Terkini
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Update berita terkini dari berbagai sumber terpercaya di Indonesia
+            <p className="text-lg text-muted-foreground text-center font-medium italic">
+              Update berita terkini dari CNN Indonesia dan Antara News
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -158,13 +158,13 @@ export const RSSNewsSection = () => {
 
   if (news.length === 0) {
     return (
-      <section id="berita-indonesia" className="py-20 bg-gray-50">
+      <section id="berita-indonesia" className="py-20 gradient-subtle">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
               Berita Indonesia Terkini
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+            <p className="text-lg text-muted-foreground text-center font-medium italic mb-6">
               Belum ada berita tersedia saat ini
             </p>
             <button
@@ -182,23 +182,19 @@ export const RSSNewsSection = () => {
   }
 
   return (
-    <section id="berita-indonesia" className="py-20 bg-gray-50 overflow-x-hidden">
+    <section id="berita-indonesia" className="py-20 gradient-subtle overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
             Berita Indonesia Terkini
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+          <p className="text-lg text-muted-foreground text-center font-medium italic">
             Update berita terkini dari CNN Indonesia dan Antara News
           </p>
-          <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              <span>Diperbarui 2x sehari</span>
-            </div>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center mt-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <RefreshCw className="w-4 h-4" />
-              <span>Berita dihapus setelah 2 hari</span>
+              <span>Diperbarui Setiap Hari</span>
             </div>
           </div>
         </div>
@@ -210,17 +206,17 @@ export const RSSNewsSection = () => {
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background rounded-full p-2 shadow-lg hover:bg-primary/10 transition-colors"
                 aria-label="Previous"
               >
-                <ChevronLeft className="w-6 h-6 text-gray-700" />
+                <ChevronLeft className="w-6 h-6 text-foreground" />
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background rounded-full p-2 shadow-lg hover:bg-primary/10 transition-colors"
                 aria-label="Next"
               >
-                <ChevronRight className="w-6 h-6 text-gray-700" />
+                <ChevronRight className="w-6 h-6 text-foreground" />
               </button>
             </>
           )}
@@ -297,7 +293,7 @@ export const RSSNewsSection = () => {
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className={`w-2 h-2 rounded-full transition-colors ${
-                    currentIndex === index ? 'bg-blue-600' : 'bg-gray-300'
+                    currentIndex === index ? 'bg-primary' : 'bg-muted-foreground/30'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -307,11 +303,8 @@ export const RSSNewsSection = () => {
         </div>
 
         <div className="text-center mt-12">
-          <p className="text-sm text-gray-500">
-            Berita dari <span className="text-blue-600 font-medium">CNN Indonesia dan Antara News</span>
-          </p>
-          <p className="text-xs text-gray-400 mt-2">
-            Maksimal 12 berita • Auto-slide setiap 3 detik • Update setiap 12 jam
+          <p className="text-sm text-muted-foreground">
+            Berita dari <span className="text-primary font-medium">CNN Indonesia dan Antara News</span>
           </p>
         </div>
       </div>
