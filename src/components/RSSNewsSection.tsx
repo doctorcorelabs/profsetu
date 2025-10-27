@@ -21,6 +21,8 @@ export const RSSNewsSection = () => {
 
   const loadRSSNews = async () => {
     try {
+      console.log('Loading RSS news...');
+      
       // Query tanpa filter expires_at terlebih dahulu untuk testing
       const { data, error } = await supabase
         .from('rss_news')
@@ -35,12 +37,14 @@ export const RSSNewsSection = () => {
           console.warn('RSS news table not found. Please run rss-news-schema.sql in Supabase.');
         }
       } else {
+        console.log('RSS news loaded:', data?.length || 0, 'items');
         // Filter expired news di client side
         const activeNews = (data || []).filter(item => {
           const expiresAt = new Date(item.expires_at);
           const now = new Date();
           return expiresAt > now;
         });
+        console.log('Active RSS news after filter:', activeNews.length, 'items');
         setNews(activeNews);
       }
     } catch (error) {
