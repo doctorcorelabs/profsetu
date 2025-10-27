@@ -21,17 +21,27 @@ export const RSSNewsSection = () => {
 
   const loadRSSNews = async () => {
     try {
+      // Query tanpa filter expires_at terlebih dahulu untuk testing
       const { data, error } = await supabase
         .from('rss_news')
         .select('*')
-        .gt('expires_at', new Date().toISOString())
         .order('pub_date', { ascending: false })
-        .limit(15); // Tampilkan maksimal 15 berita
+        .limit(15);
 
       if (error) {
         console.error('Error loading RSS news:', error);
+        // Jika tabel tidak ada (code 42P01), tampilkan pesan
+        if (error.code === '42P01' || error.code === 'PGRST116') {
+          console.warn('RSS news table not found. Please run rss-news-schema.sql in Supabase.');
+        }
       } else {
-        setNews(data || []);
+        // Filter expired news di client side
+        const activeNews = (data || []).filter(item => {
+          const expiresAt = new Date(item.expires_at);
+          const now = new Date();
+          return expiresAt > now;
+        });
+        setNews(activeNews);
       }
     } catch (error) {
       console.error('Error loading RSS news:', error);
