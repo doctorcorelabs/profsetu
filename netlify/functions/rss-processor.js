@@ -17,23 +17,8 @@ const parser = new Parser({
   }
 });
 
-// RSS feeds Indonesia - hanya 5 berita per sumber
+// RSS feeds Indonesia - hanya CNN dan Antara, 5 berita per sumber
 const RSS_FEEDS = [
-  {
-    name: 'Detik News',
-    url: 'https://rss.detik.com/index.php/detikcom',
-    category: 'nasional'
-  },
-  {
-    name: 'Kompas',
-    url: 'https://rss.kompas.com/kompascom',
-    category: 'nasional'
-  },
-  {
-    name: 'Tempo',
-    url: 'https://rss.tempo.co/nasional',
-    category: 'nasional'
-  },
   {
     name: 'CNN Indonesia',
     url: 'https://www.cnnindonesia.com/nasional/rss',
