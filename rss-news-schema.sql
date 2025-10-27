@@ -23,13 +23,28 @@ CREATE INDEX IF NOT EXISTS idx_rss_news_link ON rss_news(link);
 -- Enable RLS
 ALTER TABLE rss_news ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Allow public read access to active rss_news" ON rss_news;
+DROP POLICY IF EXISTS "Allow service role full access to rss_news" ON rss_news;
+DROP POLICY IF EXISTS "Allow service role insert" ON rss_news;
+DROP POLICY IF EXISTS "Allow service role update" ON rss_news;
+DROP POLICY IF EXISTS "Allow service role delete" ON rss_news;
+
 -- Policy untuk public read access (hanya berita yang belum expired)
 CREATE POLICY "Allow public read access to active rss_news" ON rss_news
   FOR SELECT USING (expires_at > NOW());
 
--- Policy untuk insert/update dari service role (untuk Netlify functions)
-CREATE POLICY "Allow service role full access to rss_news" ON rss_news
-  FOR ALL USING (auth.role() = 'service_role');
+-- Policy untuk service role INSERT
+CREATE POLICY "Allow service role insert" ON rss_news
+  FOR INSERT WITH CHECK (true);
+
+-- Policy untuk service role UPDATE
+CREATE POLICY "Allow service role update" ON rss_news
+  FOR UPDATE USING (true) WITH CHECK (true);
+
+-- Policy untuk service role DELETE
+CREATE POLICY "Allow service role delete" ON rss_news
+  FOR DELETE USING (true);
 
 -- Function untuk cleanup otomatis berita expired
 CREATE OR REPLACE FUNCTION cleanup_expired_rss_news()
@@ -48,6 +63,8 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS cleanup_expired_rss_news_trigger ON rss_news;
 
 CREATE TRIGGER cleanup_expired_rss_news_trigger
   AFTER INSERT ON rss_news
