@@ -5,6 +5,12 @@
 [functions]
   node_bundler = "esbuild"
 
+# SPA routing: send all paths to index.html to avoid 404 on refresh
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
 # Manual trigger untuk RSS processor
 # Gunakan GitHub Actions atau manual trigger untuk menjalankan 2x sehari
 
