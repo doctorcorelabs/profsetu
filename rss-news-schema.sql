@@ -1,4 +1,4 @@
--- Schema untuk RSS News dengan auto-expire setelah 2 hari
+-- Schema untuk RSS News dengan auto-expire setelah 3 hari
 -- Jalankan ini di Supabase SQL Editor
 
 -- Buat tabel rss_news
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS rss_news (
   source VARCHAR(255) NOT NULL,
   image_url VARCHAR(1000),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  expires_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '2 days')
+  expires_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '3 days')
 );
 
 -- Index untuk performa

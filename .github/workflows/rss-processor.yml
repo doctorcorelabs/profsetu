@@ -2,23 +2,40 @@ name: RSS News Processor
 
 on:
   schedule:
-    # Jalankan setiap 12 jam (2x sehari) - jam 06:00 dan 18:00 UTC
+    # Jalankan setiap 12 jam (2x sehari)
+    # 06:00 UTC = 13:00 WIB
+    # 18:00 UTC = 01:00 WIB (next day)
     - cron: '0 6,18 * * *'
-  workflow_dispatch: # Manual trigger
+  workflow_dispatch: # Manual trigger via GitHub Actions UI
+  repository_dispatch: # Trigger from external webhooks
+    types: [rss-update]
 
 jobs:
   rss-processor:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     steps:
     - name: Trigger RSS Processor
       run: |
-        echo "Triggering RSS processor at $(date)"
+        echo "🚀 Triggering RSS processor at $(date)"
+        echo "📍 Site URL: ${{ secrets.NETLIFY_SITE_URL }}"
         
         # Panggil Netlify function untuk proses RSS
-        curl -X POST \
+        RESPONSE=$(curl -w "\n%{http_code}" -X POST \
           -H "Content-Type: application/json" \
-          -H "Authorization: Bearer ${{ secrets.NETLIFY_ACCESS_TOKEN }}" \
-          "${{ secrets.NETLIFY_SITE_URL }}/.netlify/functions/rss-processor"
+          "${{ secrets.NETLIFY_SITE_URL }}/.netlify/functions/rss-processor" \
+          --max-time 120)
         
-        echo "RSS processor triggered successfully"
+        HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+        BODY=$(echo "$RESPONSE" | sed '$d')
+        
+        echo "📊 Response:"
+        echo "$BODY" | jq '.' || echo "$BODY"
+        
+        if [ "$HTTP_CODE" -eq 200 ]; then
+          echo "✅ RSS processor completed successfully (HTTP $HTTP_CODE)"
+        else
+          echo "❌ RSS processor failed with HTTP code: $HTTP_CODE"
+          exit 1
+        fi

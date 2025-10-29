@@ -17,7 +17,7 @@ const parser = new Parser({
   }
 });
 
-// RSS feeds Indonesia - hanya CNN dan Antara, 5 berita per sumber
+// RSS feeds Indonesia - hanya CNN dan Antara, 20 berita per sumber
 const RSS_FEEDS = [
   {
     name: 'CNN Indonesia',
@@ -36,14 +36,21 @@ async function processRSSFeed(feed) {
     console.log(`Processing ${feed.name}...`);
     const rss = await parser.parseURL(feed.url);
     
-    // Batasi hanya 5 berita terbaru per sumber
-    const newsItems = rss.items.slice(0, 5).map(item => ({
+    // Batasi 20 berita terbaru per sumber
+    const expiryMs = 3 * 24 * 60 * 60 * 1000; // 3 hari
+    const nowIso = new Date().toISOString();
+    const expiresAtIso = new Date(Date.now() + expiryMs).toISOString();
+
+    const newsItems = rss.items.slice(0, 20).map(item => ({
       title: item.title || '',
       description: item.contentSnippet || item.content || '',
       link: item.link || '',
       pub_date: new Date(item.pubDate || item.isoDate || new Date()).toISOString(),
       source: feed.name,
-      image_url: item.enclosure?.url || item.mediaContent?.url || null
+      image_url: item.enclosure?.url || item.mediaContent?.url || null,
+      // pastikan kolom waktu ada sehingga RLS/select bekerja konsisten
+      created_at: nowIso,
+      expires_at: expiresAtIso
     }));
 
     // Insert to database dengan upsert berdasarkan link

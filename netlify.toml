@@ -1,9 +1,14 @@
 [build]
-  functions = "netlify/functions"
   command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
+
+# Netlify Scheduled Function - Auto-update RSS 2x sehari
+[functions."rss-scheduler"]
+  schedule = "0 6,18 * * *"  # 06:00 dan 18:00 UTC (13:00 dan 01:00 WIB)
 
 # SPA routing: send all paths to index.html to avoid 404 on refresh
 [[redirects]]
@@ -11,14 +16,7 @@
   to = "/index.html"
   status = 200
 
-# Manual trigger untuk RSS processor
-# Gunakan GitHub Actions atau manual trigger untuk menjalankan 2x sehari
-
-# Environment variables are set in Netlify Dashboard
-# DO NOT hardcode sensitive values here
-# Go to: Site Settings > Environment Variables
-#
-# Required variables:
+# Environment variables diperlukan di Netlify Dashboard:
 # - VITE_SUPABASE_URL
 # - VITE_SUPABASE_ANON_KEY  
 # - SUPABASE_SERVICE_ROLE_KEY

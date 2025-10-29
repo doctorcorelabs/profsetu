@@ -21,31 +21,69 @@ export const RSSNewsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  const interleaveBySource = (cnn: RSSNewsItem[], antara: RSSNewsItem[], limit: number) => {
+    const result: RSSNewsItem[] = [];
+    let i = 0, j = 0;
+    while (result.length < limit && (i < cnn.length || j < antara.length)) {
+      if (i < cnn.length) {
+        result.push(cnn[i]);
+        i++;
+      }
+      if (result.length >= limit) break;
+      if (j < antara.length) {
+        result.push(antara[j]);
+        j++;
+      }
+    }
+    // Jika salah satu habis, lanjutkan dari yang tersisa
+    while (result.length < limit && i < cnn.length) {
+      result.push(cnn[i]);
+      i++;
+    }
+    while (result.length < limit && j < antara.length) {
+      result.push(antara[j]);
+      j++;
+    }
+    return result;
+  };
+
   const loadRSSNews = async () => {
     try {
       console.log('Loading RSS news...');
-      
-      const { data, error } = await supabase
-        .from('rss_news')
-        .select('*')
-        .in('source', ['CNN Indonesia', 'Antara News'])
-        .order('pub_date', { ascending: false })
-        .limit(12);
 
+      const nowIso = new Date().toISOString();
+
+      const [cnnRes, antaraRes] = await Promise.all([
+        supabase
+          .from('rss_news')
+          .select('*')
+          .eq('source', 'CNN Indonesia')
+          .gte('expires_at', nowIso)
+          .order('pub_date', { ascending: false })
+          .limit(20),
+        supabase
+          .from('rss_news')
+          .select('*')
+          .eq('source', 'Antara News')
+          .gte('expires_at', nowIso)
+          .order('pub_date', { ascending: false })
+          .limit(20)
+      ]);
+
+      const error = cnnRes.error || antaraRes.error;
       if (error) {
         console.error('Error loading RSS news:', error);
-        if (error.code === '42P01' || error.code === 'PGRST116') {
+        if ((error as any).code === '42P01' || (error as any).code === 'PGRST116') {
           console.warn('RSS news table not found. Please run rss-news-schema.sql in Supabase.');
         }
       } else {
-        console.log('RSS news loaded:', data?.length || 0, 'items');
-        const activeNews = (data || []).filter(item => {
-          const expiresAt = new Date(item.expires_at);
-          const now = new Date();
-          return expiresAt > now;
-        });
-        console.log('Active RSS news after filter:', activeNews.length, 'items');
-        setNews(activeNews);
+        const cnn = cnnRes.data || [];
+        const antara = antaraRes.data || [];
+        console.log('RSS news loaded: CNN', cnn.length, 'Antara', antara.length);
+        // Gabungkan dengan pola seimbang, fallback jika salah satu kosong
+        const merged = interleaveBySource(cnn, antara, 12);
+        console.log('Merged items for display:', merged.length);
+        setNews(merged);
       }
     } catch (error) {
       console.error('Error loading RSS news:', error);
@@ -137,7 +175,7 @@ export const RSSNewsSection = () => {
       <section id="berita-indonesia" className="py-20 gradient-subtle">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
               Berita Indonesia Terkini
             </h2>
             <p className="text-lg text-muted-foreground text-center font-medium italic">
@@ -161,7 +199,7 @@ export const RSSNewsSection = () => {
       <section id="berita-indonesia" className="py-20 gradient-subtle">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
               Berita Indonesia Terkini
             </h2>
             <p className="text-lg text-muted-foreground text-center font-medium italic mb-6">
@@ -185,7 +223,7 @@ export const RSSNewsSection = () => {
     <section id="berita-indonesia" className="py-20 gradient-subtle overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-center bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
             Berita Indonesia Terkini
           </h2>
           <p className="text-lg text-muted-foreground text-center font-medium italic">
