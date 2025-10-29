@@ -1,22 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { PostCard } from "./PostCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { fetchPublishedPosts } from '@/lib/posts'
 import { supabase } from '@/lib/supabase'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export const NewsSection = () => {
   const [news, setNews] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const POSTS_PER_PAGE = 3
+  const SLIDE_INTERVAL = 3000 // 3 detik
 
   useEffect(() => {
     async function loadNews() {
       try {
         const posts = await fetchPublishedPosts()
         
-        // Fetch tags for each post
+        // Fetch tags for 5 post terbaru
         const postsWithTags = await Promise.all(
-          posts.slice(0, 3).map(async (post: any) => {
+          posts.slice(0, 5).map(async (post: any) => {
             const { data: tagData } = await supabase
               .from('post_tags')
               .select(`
@@ -41,6 +45,39 @@ export const NewsSection = () => {
 
     loadNews()
   }, [])
+
+  // Auto slideshow
+  useEffect(() => {
+    if (news.length <= POSTS_PER_PAGE) return
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => {
+        const maxIndex = Math.ceil(news.length / POSTS_PER_PAGE) - 1
+        return prev >= maxIndex ? 0 : prev + 1
+      })
+    }, SLIDE_INTERVAL)
+
+    return () => clearInterval(interval)
+  }, [news.length])
+
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prev) => {
+      const maxIndex = Math.ceil(news.length / POSTS_PER_PAGE) - 1
+      return prev <= 0 ? maxIndex : prev - 1
+    })
+  }, [news.length])
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => {
+      const maxIndex = Math.ceil(news.length / POSTS_PER_PAGE) - 1
+      return prev >= maxIndex ? 0 : prev + 1
+    })
+  }, [news.length])
+
+  const visiblePosts = news.slice(
+    currentIndex * POSTS_PER_PAGE,
+    (currentIndex + 1) * POSTS_PER_PAGE
+  )
 
   if (loading) {
     return (
@@ -96,21 +133,67 @@ export const NewsSection = () => {
           <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
             Tetap terhubung dengan aktivitas dan program terbaru kami
           </p>
-          <Button asChild>
-            <Link to="/posts">Lihat Semua Berita</Link>
-          </Button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {news.map((item, index) => (
-            <div
-              key={item.id}
-              className="animate-fade-in"
-              style={{ animationDelay: `${index * 0.15}s` }}
-            >
-              <PostCard {...item} />
+        {/* Slideshow Container */}
+        <div className="relative max-w-6xl mx-auto mb-8">
+          {/* Navigation Buttons */}
+          {news.length > POSTS_PER_PAGE && (
+            <>
+              <button
+                onClick={handlePrev}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                aria-label="Previous"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={handleNext}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                aria-label="Next"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </>
+          )}
+
+          {/* Posts Grid */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {visiblePosts.map((item, index) => (
+              <div
+                key={item.id}
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 0.15}s` }}
+              >
+                <PostCard {...item} />
+              </div>
+            ))}
+          </div>
+
+          {/* Indicators */}
+          {news.length > POSTS_PER_PAGE && (
+            <div className="flex justify-center gap-2 mt-8">
+              {Array.from({ length: Math.ceil(news.length / POSTS_PER_PAGE) }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    index === currentIndex
+                      ? 'bg-primary w-8'
+                      : 'bg-gray-300 dark:bg-gray-600'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
             </div>
-          ))}
+          )}
+        </div>
+
+        {/* Button to view all posts */}
+        <div className="text-center">
+          <Button asChild size="lg">
+            <Link to="/posts">Tampilkan Lebih Banyak</Link>
+          </Button>
         </div>
       </div>
     </section>
