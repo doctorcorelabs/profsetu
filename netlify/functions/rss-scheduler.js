@@ -2,9 +2,8 @@
 // Berjalan otomatis setiap pukul 06:00 dan 18:00 UTC (13:00 dan 01:00 WIB)
 
 import { schedule } from '@netlify/functions';
-
-const { createClient } = require('@supabase/supabase-js');
-const Parser = require('rss-parser');
+import { createClient } from '@supabase/supabase-js';
+import Parser from 'rss-parser';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -99,8 +98,8 @@ async function cleanupExpiredNews() {
 }
 
 // Netlify Scheduled Function Handler
-// Cron: "0 6,18 * * *" (dikonfigurasi di netlify.toml)
-const handler = schedule('0 6,18 * * *', async (event) => {
+// Export as default named export 'handler'
+export const handler = schedule('0 6,18 * * *', async (event) => {
   console.log('🚀 RSS Scheduler triggered at:', new Date().toISOString());
   console.log('📋 Event:', JSON.stringify(event));
 
@@ -141,5 +140,3 @@ const handler = schedule('0 6,18 * * *', async (event) => {
     };
   }
 });
-
-exports.handler = handler;

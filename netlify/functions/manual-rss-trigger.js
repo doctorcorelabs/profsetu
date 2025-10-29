@@ -1,7 +1,7 @@
 // Manual trigger untuk RSS processor
 // Akses: https://your-site.netlify.app/.netlify/functions/manual-rss-trigger
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',

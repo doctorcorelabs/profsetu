@@ -1,5 +1,5 @@
-const { createClient } = require('@supabase/supabase-js');
-const Parser = require('rss-parser');
+import { createClient } from '@supabase/supabase-js';
+import Parser from 'rss-parser';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -94,7 +94,7 @@ async function cleanupExpiredNews() {
   }
 }
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
